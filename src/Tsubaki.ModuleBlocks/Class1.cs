@@ -23,7 +23,8 @@ namespace Tsubaki.ModuleBlocks
 
     public interface IModuleSetting
     {
-
+        void Write(string key, string value);
+        (string key, string value) Read();
     }
 
     public abstract class ModuleBase : IModule
