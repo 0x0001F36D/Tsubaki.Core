@@ -17,6 +17,13 @@ namespace Tsubaki.ModuleBlocks
         void Initialize();
 
         NextStep Execute(string[] args);
+
+        IModuleSetting Setting { get; }
+    }
+
+    public interface IModuleSetting
+    {
+
     }
 
     public abstract class ModuleBase : IModule
@@ -25,6 +32,7 @@ namespace Tsubaki.ModuleBlocks
 
         public virtual InitializationMode InitializationMode { get; }
 
+        public IModuleSetting Setting { get; }
 
         protected ModuleBase()
         {
