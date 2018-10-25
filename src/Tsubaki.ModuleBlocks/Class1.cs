@@ -6,10 +6,12 @@ using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Linq;
-using System.Text;
+    using System.Reflection;
+    using System.Text;
 using System.Threading.Tasks;
 
-    /*
+    
+    
     [InheritedExport]
     public interface IModule
     {
@@ -26,24 +28,23 @@ using System.Threading.Tasks;
         IModuleSetting Setting { get; }
     }
 
-    
-
-    */public interface IModuleSetting
+    public interface IModuleSetting
     {
         void Write(string key, string value);
         (string key, string value)[] Read();
         string this[string key] { get; set; }
 
     }
-[Flags]
+
+    [Flags]
     public enum ModuleScopes
     {
         None = 0
     }
 
 
-    [InheritedExport]
-    public abstract class ModuleBase // : IModule
+    // [InheritedExport]
+    public abstract class ModuleBase  : IModule
     {
         public abstract ModuleScopes Scopes { get; }
         public abstract string Name { get;  }
@@ -74,34 +75,35 @@ using System.Threading.Tasks;
 
     }
 
-    internal interface IMetadata
+    public interface IModuleMetadata
     {
         string Name { get; }
     }
 
-    [Export(typeof(IMetadata))]
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public sealed class MetadataAttribute : Attribute, IMetadata
+
+    [MetadataAttribute]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class ModuleAttribute : ExportAttribute, IModuleMetadata
     {
-        public MetadataAttribute(string name)
+        public ModuleAttribute(string name)
+           : base(typeof(IModule))
         {
-            this.Name = name;
+            this._name = name;
         }
+        private string _name;
 
-
-        [Export]
-        public string Name { get; }
+        string IModuleMetadata.Name => this._name;
     }
-
-
     
+
+
     public enum InitializationMode
     {
         OnCreate,
         Everytime,
     }
 
-    [Metadata("TestMD")]
+    [Module("TestMD")]
      public class TestMD : ModuleBase
     {
         public override InitializationMode InitializationMode => InitializationMode.OnCreate;
@@ -140,13 +142,13 @@ using System.Threading.Tasks;
         private static volatile LoadLyb s_instance;
 
         [ImportMany]
-        private IEnumerable< Lazy<ModuleBase, IMetadata>> _modules;
+        private IEnumerable< Lazy<IModule, IModuleMetadata>> _modules;
 
         private LoadLyb()
         {
             var catalog = new AggregateCatalog();
             //Adds all the parts found in the same assembly as the Program class
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(MainClass).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
 
             //Create the CompositionContainer with the parts in the catalog
             this._container = new CompositionContainer(catalog);
@@ -162,7 +164,7 @@ using System.Threading.Tasks;
             }
         }
 
-        public ModuleBase this[string name, bool ignoreCase = false]
+        public IModule this[string name, bool ignoreCase = false]
         {
             get
             {
@@ -180,6 +182,15 @@ using System.Threading.Tasks;
             }
         }
         private CompositionContainer _container;
+
+
+        public void D()
+        {
+            foreach (var item in this._modules)
+            {
+                Console.WriteLine(item.Metadata.Name);
+            }
+        }
     }
 
 
@@ -188,8 +199,8 @@ using System.Threading.Tasks;
         static void Main(string[] args)
         {
 
-            var m = LoadLyb.Instance["TestMD"];
-            m.Execute(null, out var _);
+            LoadLyb.Instance.D();
+            //m.Execute(null, out var _);
 
 
             Console.ReadKey();
