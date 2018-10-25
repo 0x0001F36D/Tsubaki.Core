@@ -4,24 +4,22 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0A3261C4-9BE9-4CB9-99F9-944D89A96C1D}</ProjectGuid>
+    <ProjectGuid>{C095CCB9-E2DF-4946-A245-A663BA584BBD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tsubaki.ModuleBlocks</RootNamespace>
-    <AssemblyName>Tsubaki.ModuleBlocks</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>Tsubaki.I18N</RootNamespace>
+    <AssemblyName>Tsubaki.I18N</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,20 +28,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Conditions, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Conditions.NET.1.2.0\lib\net451\Conditions.dll</HintPath>
-    </Reference>
-    <Reference Include="Conditions.Guards, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Guards.NET.1.3.0\lib\net451\Conditions.Guards.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,25 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\InitializationMode.cs" />
-    <Compile Include="Enums\ModuleScopes.cs" />
-    <Compile Include="IModule.cs" />
-    <Compile Include="IModuleSetting.cs" />
-    <Compile Include="Metadata\IModuleMetadata.cs" />
-    <Compile Include="Metadata\ModuleAttribute.cs" />
-    <Compile Include="Module.cs" />
-    <Compile Include="ModuleBase.cs" />
-    <Compile Include="ModuleNotFoundException.cs" />
+    <Compile Include="Class2.cs" />
+    <Compile Include="M.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>M.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tsubaki.I18N\Tsubaki.I18N.csproj">
-      <Project>{c095ccb9-e2df-4946-a245-a663ba584bbd}</Project>
-      <Name>Tsubaki.I18N</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="M.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>M.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
