@@ -1,17 +1,22 @@
 ﻿
+
 namespace Tsubaki.ModuleBlocks
-{using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+{
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Text;
-using System.Threading.Tasks;
+    using System.Threading.Tasks;
+    using ModuleBlocks.Metadata;
+    using Tsubaki.ModuleBlocks.Enums;
 
-    
-    
+    using System.Diagnostics.CodeAnalysis;
+    using Conditions.Guards;
+
     [InheritedExport]
     public interface IModule
     {
@@ -36,19 +41,23 @@ using System.Threading.Tasks;
 
     }
 
-    [Flags]
-    public enum ModuleScopes
-    {
-        None = 0
-    }
-
-
-    // [InheritedExport]
     public abstract class ModuleBase  : IModule
     {
-        public abstract ModuleScopes Scopes { get; }
-        public abstract string Name { get;  }
+        public virtual string Name
+        {
+            get
+            {
+                var t = this.GetType();
+                if (t.GetCustomAttribute<ModuleAttribute>() is ModuleAttribute m)
+                {
+                    return m.Name;
+                }
+                return t.Name;
+            }
+        }
 
+        public abstract ModuleScopes Scopes { get; }
+        
         public virtual InitializationMode InitializationMode { get; }
 
         public IModuleSetting Setting { get; }
@@ -75,39 +84,10 @@ using System.Threading.Tasks;
 
     }
 
-    public interface IModuleMetadata
-    {
-        string Name { get; }
-    }
-
-
-    [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class ModuleAttribute : ExportAttribute, IModuleMetadata
-    {
-        public ModuleAttribute(string name)
-           : base(typeof(IModule))
-        {
-            this._name = name;
-        }
-        private string _name;
-
-        string IModuleMetadata.Name => this._name;
-    }
-    
-
-
-    public enum InitializationMode
-    {
-        OnCreate,
-        Everytime,
-    }
-
-    [Module("TestMD")]
-     public class TestMD : ModuleBase
+    [Module("V")]
+    public class TestMD : ModuleBase
     {
         public override InitializationMode InitializationMode => InitializationMode.OnCreate;
-        public override string Name => "Test";
 
         public override ModuleScopes Scopes => ModuleScopes.None;
         protected override bool ExecuteImpl(string[] args, out object callback)
@@ -117,6 +97,8 @@ using System.Threading.Tasks;
             return true;
         }
     }
+
+
 
     public sealed class LoadLyb
     {
@@ -141,70 +123,68 @@ using System.Threading.Tasks;
         private readonly static object s_locker = new object();
         private static volatile LoadLyb s_instance;
 
+#pragma warning disable 0649
         [ImportMany]
-        private IEnumerable< Lazy<IModule, IModuleMetadata>> _modules;
+        private Lazy<IModule, IModuleMetadata>[] _modules;
+#pragma warning restore 0649
+        private CompositionContainer _container;
+
 
         private LoadLyb()
         {
             var catalog = new AggregateCatalog();
-            //Adds all the parts found in the same assembly as the Program class
-            catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
 
-            //Create the CompositionContainer with the parts in the catalog
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Debug.WriteLine("Composited assembly: " + assembly.FullName);
+                catalog.Catalogs.Add(new AssemblyCatalog(assembly));
+            }
+
             this._container = new CompositionContainer(catalog);
 
-            //Fill the imports of this object
             try
             {
                 this._container.ComposeParts(this);
+                foreach (var m in this._modules)
+                {
+                    Debug.WriteLine("Loaded module: " + m.Metadata.Name);
+                }
             }
             catch (CompositionException compositionException)
             {
-                Console.WriteLine(compositionException.ToString());
+                Debug.WriteLine("Composite Error: " +compositionException.ToString());
             }
         }
 
-        public IModule this[string name, bool ignoreCase = false]
+        public IModule this[string name, bool ignoreCase = false] 
+            => this.Get(name, ignoreCase);
+
+        public IModule Get(string name, bool ignoreCase = false)
         {
-            get
+            Check.If(name).IsNotNullOrEmpty();
+
+            var ic = ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            foreach (var lazy in this._modules)
             {
-                Console.WriteLine(this._modules.Count());
-
-                foreach (var m in this._modules)
-                {
-                    System.Diagnostics.Debug.WriteLine("MDK: "+m.Metadata.Name);
-                    if (string.Equals(name, m.Metadata.Name, ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture))
-                    {
-                        return m.Value;
-                    }
-                }
-                throw new KeyNotFoundException(name);
+                var n = lazy.Metadata is IModuleMetadata m ? (m.Name ?? lazy.Value.Name) : lazy.Value.Name;
+                if (string.Equals( n ,name, ic))
+                    return lazy.Value;
             }
-        }
-        private CompositionContainer _container;
 
 
-        public void D()
-        {
-            foreach (var item in this._modules)
-            {
-                Console.WriteLine(item.Metadata.Name);
-            }
+
+            throw new ModuleNotFoundException(name);
         }
     }
 
-
-    class MainClass
+    public sealed class ModuleNotFoundException : Exception
     {
-        static void Main(string[] args)
+        internal ModuleNotFoundException(string moduleName)
         {
-
-            LoadLyb.Instance.D();
-            //m.Execute(null, out var _);
-
-
-            Console.ReadKey();
-            return;
+            this.ModuleName = moduleName ?? throw new ArgumentNullException(nameof(moduleName));
         }
+
+        public string ModuleName { get; }
     }
+    
 }
