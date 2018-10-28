@@ -12,13 +12,11 @@ namespace Tsubaki.ModuleBlocks
 
         ModuleScopes Scopes { get; }
 
-        InitializationMode InitializationMode { get;  }
-
-        void Initialize();
+        void OnInitialize();
 
         bool Execute(string[] args, out object callback);
-
-        IModuleSetting Setting { get; }
+        
     }
+
     
 }

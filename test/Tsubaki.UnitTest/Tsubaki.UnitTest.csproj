@@ -62,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Tsubaki.Core\Tsubaki.Core.csproj">
+      <Project>{fb1ddd0d-437f-4c09-a770-b3037b1ebef6}</Project>
+      <Name>Tsubaki.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Tsubaki.ModuleBlocks\Tsubaki.ModuleBlocks.csproj">
       <Project>{0A3261C4-9BE9-4CB9-99F9-944D89A96C1D}</Project>
       <Name>Tsubaki.ModuleBlocks</Name>

@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C095CCB9-E2DF-4946-A245-A663BA584BBD}</ProjectGuid>
+    <ProjectGuid>{FB1DDD0D-437F-4C09-A770-B3037B1EBEF6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tsubaki.I18N</RootNamespace>
-    <AssemblyName>Tsubaki.I18N</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <RootNamespace>Tsubaki.Core</RootNamespace>
+    <AssemblyName>Tsubaki.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,7 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Conditions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Conditions.NET.2.0.0\lib\net451\Conditions.dll</HintPath>
+    </Reference>
+    <Reference Include="Conditions.Guards, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Guards.NET.1.3.0\lib\net451\Conditions.Guards.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,19 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class2.cs" />
-    <Compile Include="M.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>M.resx</DependentUpon>
-    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="ModuleNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="M.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>M.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Folder Include="NewFolder1\" />
+    <Folder Include="Presentation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tsubaki.ModuleBlocks\Tsubaki.ModuleBlocks.csproj">
+      <Project>{0A3261C4-9BE9-4CB9-99F9-944D89A96C1D}</Project>
+      <Name>Tsubaki.ModuleBlocks</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

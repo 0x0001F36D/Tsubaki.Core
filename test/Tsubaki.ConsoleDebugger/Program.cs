@@ -8,21 +8,57 @@ namespace Tsubaki.ConsoleDebugger
     using System.Threading.Tasks;
     using Tsubaki.ModuleBlocks;
 
+    using ApiAi;
+    using Newtonsoft.Json;
+    using Tsubaki.Core;
+
     class Program
-    {
+    { 
         static void Main(string[] args)
         {
-            try
+            /*
+            var module = Module.Manager["V"];
+            if (module.Execute(new[] 
             {
-                var m = Module.Manager["Vx"];
-                m.Execute(new[] { "" }, out var _);
-            }
-            catch(Exception e)
+                "--target",
+                "https://fb.me",
+                "--exe",
+                "chrome.exe",
+            }, out var c))
             {
-                Console.WriteLine(e);
+                Console.WriteLine(c);
             }
+            */
             Console.ReadKey();
-            return;
+            return ;
         }
+
+        static void Apiai()
+        {
+
+            var req = QueryService.SendRequest(new ApiAi.Models.ConfigModel
+            {
+                AccesTokenClient = ""
+            }, "");
+            var result = req.GetType().GetProperties().Select(x => new
+            {
+                //Type = x.PropertyType.FullName,
+                x.Name,
+                Value = x.GetValue(req)
+            }).ToList();
+            Console.WriteLine(result.DebugString());
+
+          
+
+        }
+    }
+
+    static class Ex
+    {
+        public static string DebugString(this object o)
+        {
+            return JsonConvert.SerializeObject(o, Formatting.Indented);
+        }
+
     }
 }

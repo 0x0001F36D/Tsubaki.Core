@@ -14,8 +14,7 @@ namespace Tsubaki.UnitTest.ModuleBlocks
         [TestCase]
         public void HasMetadata()
         {
-            var m = Tsubaki.ModuleBlocks.Module.Manager["Fake"];
-
+            var m = Tsubaki.ModuleBlocks.Module.Manager["Has"];
             var result = m.Execute(Array.Empty<string>(), out var callback);
 
             Assert.True(result);
@@ -42,7 +41,7 @@ namespace Tsubaki.UnitTest.ModuleBlocks
     {
         public override ModuleScopes Scopes => ModuleScopes.None;
 
-        protected override bool ExecuteImpl(string[] args, out object callback)
+        protected override bool ExecuteImpl(string[] args, ref object callback)
         {
             callback = "Success";
             return true;
@@ -56,7 +55,7 @@ namespace Tsubaki.UnitTest.ModuleBlocks
     {
         public override ModuleScopes Scopes => ModuleScopes.None;
 
-        protected override bool ExecuteImpl(string[] args, out object callback)
+        protected override bool ExecuteImpl(string[] args, ref object callback)
         {
             callback = "Success";
             return true;

@@ -5,7 +5,7 @@ namespace Tsubaki.ModuleBlocks
     using System.Reflection;
     using ModuleBlocks.Metadata;
     using Tsubaki.ModuleBlocks.Enums;
-
+    
     public abstract class ModuleBase  : IModule
     {
         public virtual string Name
@@ -20,31 +20,24 @@ namespace Tsubaki.ModuleBlocks
                 return t.Name;
             }
         }
-
         public abstract ModuleScopes Scopes { get; }
-        
-        public virtual InitializationMode InitializationMode { get; }
-
-        public IModuleSetting Setting { get; }
 
         protected ModuleBase()
         {
-            if (InitializationMode == InitializationMode.OnCreate)
-                this.Initialize();
+            this.OnInitialize();
         }
 
-        public virtual void Initialize()
+        public virtual void OnInitialize()
         {
         }
 
-        protected abstract bool ExecuteImpl(string[] args, out object callback);
+        protected abstract bool ExecuteImpl(string[] args, ref object callback);
 
 
         public bool Execute(string[] args, out object callback)
         {
-            if (this.InitializationMode == InitializationMode.Everytime)
-                this.Initialize();
-            return this.ExecuteImpl(args ,out callback);
+            callback = null;
+            return this.ExecuteImpl(args ,ref callback);
         }
 
     }

@@ -9,6 +9,8 @@ namespace Tsubaki.ModuleBlocks
     using ModuleBlocks.Metadata;
     using Conditions.Guards;
     using Tsubaki.ModuleBlocks.Internal;
+    using System.IO;
+    using System.Reflection;
 
     public sealed class Module
     {
@@ -35,7 +37,7 @@ namespace Tsubaki.ModuleBlocks
 
 #pragma warning disable 0649
         [ImportMany]
-        private Lazy<IModule, IModuleMetadata>[] _modules;
+        private Lazy<IModule, IModuleMetadata>[] _modules = new Lazy<IModule, IModuleMetadata>[0];
 #pragma warning restore 0649
 
         private CompositionContainer _container;
@@ -50,6 +52,19 @@ namespace Tsubaki.ModuleBlocks
                 catalog.Catalogs.Add(new AssemblyCatalog(assembly));
             }
 
+            var dir = new DirectoryInfo("./Modules/");
+            if (!dir.Exists)
+            {
+                dir.Create();
+            }
+            foreach (var sub in dir.GetDirectories())
+            {
+                var f = new DirectoryCatalog(sub.FullName, "*.dll");
+                catalog.Catalogs.Add(f);
+            }
+            
+
+
             this._container = new CompositionContainer(catalog);
 
             try
@@ -60,9 +75,17 @@ namespace Tsubaki.ModuleBlocks
                     Debug.WriteLine("Loaded module: " + m.Metadata.Name);
                 }
             }
-            catch (CompositionException compositionException)
+            catch (ReflectionTypeLoadException e)
             {
-                Debug.WriteLine("Composite Error: " +compositionException.ToString());
+                Debug.WriteLine("Loaded Error: " + e.ToString());
+                foreach (var ex in e.LoaderExceptions)
+                {
+                    Debug.WriteLine(ex.Message); 
+                }
+            }
+            catch (CompositionException e)
+            {
+                Debug.WriteLine("Composite Error: " +e.ToString());
             }
         }
 
