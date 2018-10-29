@@ -10,13 +10,56 @@ namespace Tsubaki.ConsoleDebugger
 
     using ApiAi;
     using Newtonsoft.Json;
+    using Tsubaki.ModuleBlocks.Managment;
+
+    [Module("Fake", "Test", "Fake")]
+    class MFake : ModuleBase
+    {
+        protected override bool ExecuteImpl(string[] args, ref object callback)
+        {
+            if (args.Contains("fake"))
+                return true;
+
+            else
+                return false;
+        }
+    }
+
+    [Module("Real", "NotATest", "Real")]
+    class MReal : ModuleBase
+    {
+        protected override bool ExecuteImpl(string[] args, ref object callback)
+        {
+            if (args.Contains("real"))
+            {
+                callback = "Success";
+                return true;
+            }
+            else
+            {
+                callback = "failure";
+                return false;
+            }
+        }
+    }
 
     class Program
-    { 
+    {
         static void Main(string[] args)
         {
+
+
+            var result = Module.Manager.Execute(
+                keywords: new[] { "Real" },
+                args: new[] { "real" },
+                callback: out var callback);
+
+            Console.WriteLine(result);
+            Console.WriteLine(callback);
+            Console.WriteLine();
             
-            var module = Module.Manager["V"];
+            /*
+            var module = Module.Manager["v"];
             if (module.Execute(new[] 
             {
                 "--target",
@@ -27,7 +70,7 @@ namespace Tsubaki.ConsoleDebugger
             {
                 Console.WriteLine(c);
             }
-            
+            */
             Console.ReadKey();
             return ;
         }

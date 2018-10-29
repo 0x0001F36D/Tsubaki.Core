@@ -42,6 +42,7 @@
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -62,6 +63,10 @@
     <ProjectReference Include="..\..\src\Tsubaki.Core\Tsubaki.Core.csproj">
       <Project>{fb1ddd0d-437f-4c09-a770-b3037b1ebef6}</Project>
       <Name>Tsubaki.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Tsubaki.ModuleBlocks.Management\Tsubaki.ModuleBlocks.Management.csproj">
+      <Project>{BE8FCD60-8A28-4C1D-B20D-CD075C1E2F06}</Project>
+      <Name>Tsubaki.ModuleBlocks.Management</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Tsubaki.ModuleBlocks\Tsubaki.ModuleBlocks.csproj">
       <Project>{0a3261c4-9be9-4cb9-99f9-944d89a96c1d}</Project>

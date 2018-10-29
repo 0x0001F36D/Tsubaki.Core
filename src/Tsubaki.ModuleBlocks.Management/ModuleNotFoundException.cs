@@ -1,6 +1,6 @@
 ﻿
 
-namespace Tsubaki.ModuleBlocks
+namespace Tsubaki.ModuleBlocks.Managment
 {
     using System;
     using Tsubaki.ModuleBlocks.Internal;

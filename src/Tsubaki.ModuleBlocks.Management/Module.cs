@@ -1,15 +1,16 @@
 ﻿
 
-namespace Tsubaki.ModuleBlocks
+namespace Tsubaki.ModuleBlocks.Managment
 {
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
-    using Conditions.Guards;
+
     using Tsubaki.ModuleBlocks.Internal;
     using System.IO;
     using System.Reflection;
+    using System.Collections.Generic;
 
     public sealed class Module
     {
@@ -47,7 +48,7 @@ namespace Tsubaki.ModuleBlocks
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                Debug.WriteLine("Composited assembly: " + assembly.FullName);
+                Debug.WriteLine("Prepare assembly for composition: " + assembly.FullName);
                 catalog.Catalogs.Add(new AssemblyCatalog(assembly));
             }
 
@@ -76,6 +77,7 @@ namespace Tsubaki.ModuleBlocks
             }
             catch(TypeLoadException e)
             {
+                //版本不同
                 Debug.WriteLine("Loaded Error: " + e.ToString());
             }
             catch (ReflectionTypeLoadException e)
@@ -112,7 +114,8 @@ namespace Tsubaki.ModuleBlocks
         /// <exception cref="ModuleNotFoundException"/>
         public IModule Get(string name, bool ignoreCase = false)
         {
-            Check.If(name).IsNotNullOrEmpty();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("message", nameof(name));
 
             var ic = ignoreCase 
                 ? StringComparison.CurrentCultureIgnoreCase 
@@ -125,6 +128,64 @@ namespace Tsubaki.ModuleBlocks
             }
 
             throw new ModuleNotFoundException(name);
+        }
+
+        public void All()
+        {
+            foreach (var item in this._modules)
+            {
+                Debug.WriteLine(item.Metadata.Name);
+            }
+            Debug.WriteLine("-----");
+        }
+
+        private static class Diff
+        {
+            private static HashSet<string> GetSet(IEnumerable<string> strings)
+            {
+                var hs = new HashSet<string>();
+                foreach (var str in strings)
+                {
+                    hs.Add(str.ToLower());
+                }
+                return hs;
+            }
+
+
+            public static double Compare(IEnumerable<string> src, IEnumerable<string> cmp)
+            {
+                if (src is null || cmp is null)
+                    return 0.0;
+
+                var s = GetSet(src);
+                var c = GetSet(cmp);
+
+                var t = s.Count + c.Count;
+
+                s.IntersectWith(c);
+                return (double)s.Count / t;
+
+            }
+        }
+
+        public bool Execute(string[] keywords, string[] args, out object callback)
+        {
+            var top_v = 0.0;
+            var top = default(Lazy<IModule, IModuleMetadata>);
+
+            foreach (var m in this._modules)
+            {
+                var diff = Diff.Compare(m.Metadata.Keywords, keywords);
+                if (diff > top_v)
+                {
+                    top_v = diff;
+                    top = m;
+                }
+            }
+
+            //Found the highest similar object
+            return top.Value.Execute(args, out callback);
+
         }
     }
     

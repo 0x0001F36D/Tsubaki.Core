@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tsubaki.ConsoleDebugger", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tsubaki.Core", "src\Tsubaki.Core\Tsubaki.Core.csproj", "{FB1DDD0D-437F-4C09-A770-B3037B1EBEF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tsubaki.ModuleBlocks.Management", "src\Tsubaki.ModuleBlocks.Management\Tsubaki.ModuleBlocks.Management.csproj", "{BE8FCD60-8A28-4C1D-B20D-CD075C1E2F06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{FB1DDD0D-437F-4C09-A770-B3037B1EBEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB1DDD0D-437F-4C09-A770-B3037B1EBEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB1DDD0D-437F-4C09-A770-B3037B1EBEF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE8FCD60-8A28-4C1D-B20D-CD075C1E2F06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE8FCD60-8A28-4C1D-B20D-CD075C1E2F06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE8FCD60-8A28-4C1D-B20D-CD075C1E2F06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE8FCD60-8A28-4C1D-B20D-CD075C1E2F06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -66,6 +66,10 @@
       <Project>{fb1ddd0d-437f-4c09-a770-b3037b1ebef6}</Project>
       <Name>Tsubaki.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Tsubaki.ModuleBlocks.Management\Tsubaki.ModuleBlocks.Management.csproj">
+      <Project>{BE8FCD60-8A28-4C1D-B20D-CD075C1E2F06}</Project>
+      <Name>Tsubaki.ModuleBlocks.Management</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Tsubaki.ModuleBlocks\Tsubaki.ModuleBlocks.csproj">
       <Project>{0A3261C4-9BE9-4CB9-99F9-944D89A96C1D}</Project>
       <Name>Tsubaki.ModuleBlocks</Name>

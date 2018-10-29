@@ -4,6 +4,7 @@ namespace Tsubaki.UnitTest.ModuleBlocks
     using System;
     using NUnit.Framework;
     using Tsubaki.ModuleBlocks;
+    using Tsubaki.ModuleBlocks.Managment;
 
     [TestFixture]
     public class ModuleManageTest
@@ -12,7 +13,7 @@ namespace Tsubaki.UnitTest.ModuleBlocks
         [TestCase]
         public void HasMetadata()
         {
-            var m = Tsubaki.ModuleBlocks.Module.Manager["Has"];
+            var m = Module.Manager["Has"];
             var result = m.Execute(Array.Empty<string>(), out var callback);
 
             Assert.True(result);
