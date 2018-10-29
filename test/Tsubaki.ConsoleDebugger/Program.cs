@@ -10,13 +10,12 @@ namespace Tsubaki.ConsoleDebugger
 
     using ApiAi;
     using Newtonsoft.Json;
-    using Tsubaki.Core;
 
     class Program
     { 
         static void Main(string[] args)
         {
-            /*
+            
             var module = Module.Manager["V"];
             if (module.Execute(new[] 
             {
@@ -28,7 +27,7 @@ namespace Tsubaki.ConsoleDebugger
             {
                 Console.WriteLine(c);
             }
-            */
+            
             Console.ReadKey();
             return ;
         }

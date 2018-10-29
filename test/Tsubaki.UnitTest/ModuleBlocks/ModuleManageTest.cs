@@ -4,8 +4,6 @@ namespace Tsubaki.UnitTest.ModuleBlocks
     using System;
     using NUnit.Framework;
     using Tsubaki.ModuleBlocks;
-    using Tsubaki.ModuleBlocks.Metadata;
-    using Tsubaki.ModuleBlocks.Enums;
 
     [TestFixture]
     public class ModuleManageTest
@@ -39,7 +37,6 @@ namespace Tsubaki.UnitTest.ModuleBlocks
 
     public sealed class NoMetadata : ModuleBase
     {
-        public override ModuleScopes Scopes => ModuleScopes.None;
 
         protected override bool ExecuteImpl(string[] args, ref object callback)
         {
@@ -50,10 +47,9 @@ namespace Tsubaki.UnitTest.ModuleBlocks
     }
 
 
-    [Module("Has")]
+    [Module("Has", "s","v")]
     public sealed class HasMetadata : ModuleBase
     {
-        public override ModuleScopes Scopes => ModuleScopes.None;
 
         protected override bool ExecuteImpl(string[] args, ref object callback)
         {

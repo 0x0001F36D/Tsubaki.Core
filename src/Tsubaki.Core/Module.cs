@@ -6,7 +6,6 @@ namespace Tsubaki.ModuleBlocks
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
-    using ModuleBlocks.Metadata;
     using Conditions.Guards;
     using Tsubaki.ModuleBlocks.Internal;
     using System.IO;
@@ -74,6 +73,10 @@ namespace Tsubaki.ModuleBlocks
                 {
                     Debug.WriteLine("Loaded module: " + m.Metadata.Name);
                 }
+            }
+            catch(TypeLoadException e)
+            {
+                Debug.WriteLine("Loaded Error: " + e.ToString());
             }
             catch (ReflectionTypeLoadException e)
             {
